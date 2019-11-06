@@ -20,7 +20,7 @@ class MQBasis2D
         NEUMANN_OPERATOR
     };
 
-    MQBasis2D(double CCC = 1.0) : cc_(CCC){};
+    MQBasis2D(double CCC = 2.0) : cc_(CCC){};
 
     ~MQBasis2D(){};
 

@@ -18,7 +18,7 @@ SimulationDomain<meshType, RBFBasisType>::SimulationDomain(
       endTime_(0.0),
       crankNicolsonEpsilon_(0.001),
       crankNicolsonMaxIter_(10),
-      neighborNum_(5),
+      neighborNum_(9),
       kdTree_()
 {
     setUpSimulation();
@@ -174,6 +174,13 @@ void SimulationDomain<meshType, RBFBasisType>::assembleMatrix()
     }
 
     systemVarMatrix_.makeCompressed();
+
+    Eigen::SparseMatrix<double> systemVarMatrix_adj =
+        systemVarMatrix_.adjoint();
+
+    std::cout << "\tIS SELFADJOINT: "
+              << (systemVarMatrix_adj.isApprox(systemVarMatrix_) ? "YES\n"
+                                                                 : "NO\n");
 }
 
 template <typename meshType, typename RBFBasisType>
@@ -203,7 +210,7 @@ void SimulationDomain<meshType, RBFBasisType>::solveDomain()
     //     // return;
     // }
     // // solution_ = solver.solveWithGuess(rhs, x0);
-    // solution_ = solver.solve(rhs);
+    // // solution_ = solver.solve(rhs);
 
     // std::cout << "#iterations:     " << solver.iterations() << std::endl;
     // std::cout << "estimated error: " << solver.error() << std::endl;
@@ -213,7 +220,7 @@ void SimulationDomain<meshType, RBFBasisType>::solveDomain()
     Eigen::SparseLU<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int>>
         solver;
 
-    // Compute the ordering permutation vector from the structural pattern of A 
+    // Compute the ordering permutation vector from the structural pattern of A
     solver.analyzePattern(systemVarMatrix_);
     // Compute the numerical factorization
     solver.factorize(systemVarMatrix_);
