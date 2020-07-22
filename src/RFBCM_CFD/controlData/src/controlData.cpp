@@ -2,22 +2,20 @@
 #include <fstream>
 #include <iostream>
 
-controlData::controlData()
-{
-    setWorkingDir(std::filesystem::current_path());
-    readParamsData();
-}
-
 controlData::controlData(const std::filesystem::path workingDir_)
+    : workingDir_(workingDir_)
 {
-    setWorkingDir(workingDir_);
+    std::cout << "working directory: " << workingDir_.string() << std::endl;
     readParamsData();
 }
 
-void controlData::setWorkingDir(const std::filesystem::path workingDir)
+void controlData::readParamsData()
 {
-    workingDir_ = workingDir;
-    std::cout << "set working directory: " << workingDir_.string() << '\n';
+    std::ifstream paramsStream(workingDir().concat("/params.json").string());
+    if (paramsStream.good())
+    {
+        paramsStream >> paramsData_;
+    }
 }
 
 std::filesystem::path controlData::workingDir() const
@@ -28,15 +26,6 @@ std::filesystem::path controlData::workingDir() const
 std::filesystem::path controlData::vtkDir() const
 {
     return workingDir().concat("/vtk");
-}
-
-void controlData::readParamsData()
-{
-    std::ifstream paramsStream(workingDir().concat("/params.json").string());
-    if (paramsStream.good())
-    {
-        paramsStream >> paramsData_;
-    }
 }
 
 nlohmann::json controlData::paramsDataAt(

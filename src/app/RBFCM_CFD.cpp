@@ -20,9 +20,9 @@ int main(int argc, char** argv)
     options.add_options()("c,case", "Case Path", cxxopts::value<std::string>())(
         "h,help", "Print usage");
 
-    auto result = options.parse(argc, argv);
+    auto optionResult = options.parse(argc, argv);
 
-    if (result.count("help"))
+    if (optionResult.count("help"))
     {
         std::cout << options.help() << std::endl;
         exit(0);
@@ -32,9 +32,9 @@ int main(int argc, char** argv)
     // build control data
     // ****************************************************************************
     std::shared_ptr<controlData> myControlData;
-    if (result.count("case"))
-        myControlData =
-            std::make_shared<controlData>(result["case"].as<std::string>());
+    if (optionResult.count("case"))
+        myControlData = std::make_shared<controlData>(
+            optionResult["case"].as<std::string>());
     else
         myControlData = std::make_shared<controlData>();
 
@@ -42,6 +42,7 @@ int main(int argc, char** argv)
     // Build mesh data
     // ****************************************************************************
     auto myMeshData = std::make_shared<MeshData>(myControlData);
+    if (!myMeshData->isReadGood()) return 0;
 
     // ****************************************************************************
     // Define RBF Type

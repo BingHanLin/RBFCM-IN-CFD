@@ -4,12 +4,12 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "D:/msys32/mingw64/include/**"
+                "D:/msys64/mingw64/include/**"
             ],
-            "compilerPath": "D:/msys32/mingw64/bin/g++.exe",
+            "compilerPath": "D:/msys64/mingw64/bin/g++.exe",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-x64"
+            "intelliSenseMode": "clang-x64"
         }
     ],
     "version": 4

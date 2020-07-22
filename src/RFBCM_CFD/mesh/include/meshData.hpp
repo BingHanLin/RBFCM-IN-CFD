@@ -26,6 +26,8 @@ class MeshData
 
     std::vector<vec3d<double>>& nodes();
     int numOfNodes() const;
+    bool isReadGood() const;
+
     std::shared_ptr<BoundaryCondition> nodeBC(const int nodeID) const;
 
     nodesCloud neighborNodesCloud(const int nodeID, const int neighborNum);
@@ -39,15 +41,38 @@ class MeshData
 
     std::map<std::string, std::vector<int>> groupToNodesMap_;
     std::map<std::string, std::shared_ptr<BoundaryCondition>> groupToBCMap_;
+
     std::vector<std::shared_ptr<BoundaryCondition>> nodesToBC_;
     std::vector<std::string> nodesToGroup_;
 
-    int numOfNodes_;
     KDTreeEigenAdaptor<std::vector<vec3d<double>>, double, 3> kdTree_;
 
-    void buildBoundaryConditions();
-    void compactGroupToNodesMap(const std::map<std::string, std::vector<int>>&
-                                    groupToNodesMapBeforeCompact);
+    int numOfNodes_;
+    bool isReadGood_;
+
+    void buildGroupAndMap(const std::map<std::string, std::vector<int>>&
+                              groupToNodesMapBeforeCompact);
 };
+
+inline std::vector<vec3d<double>>& MeshData::nodes()
+{
+    return nodes_;
+}
+
+inline std::shared_ptr<BoundaryCondition> MeshData::nodeBC(
+    const int nodeID) const
+{
+    return nodesToBC_[nodeID];
+}
+
+inline int MeshData::numOfNodes() const
+{
+    return numOfNodes_;
+}
+
+inline bool MeshData::isReadGood() const
+{
+    return isReadGood_;
+}
 
 #endif
